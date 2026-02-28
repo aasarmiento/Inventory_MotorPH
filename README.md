@@ -70,8 +70,6 @@ The implementation is verified through the following operational goals:
 
 ---
 
-## ⚖️ Intellectual Property Notice
-This project is an exclusive property of **Mapua-Malayan Digital College** and is protected under **Republic Act No. 8293 (IP Code of the Philippines)**. Unauthorized modification, distribution, or sale of this template is strictly prohibited.
 
 ---
 
