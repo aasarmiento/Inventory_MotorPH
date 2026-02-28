@@ -1,7 +1,7 @@
 /**
  * 8. TECHNICAL IMPLEMENTATION - DATA OBJECT
  * This class represents a single inventory record, encapsulating the 
- * essential fields identified in Section 3: Date, Status, Brand, and Engine Number.
+ * essential fields identified  Date, Status, Brand, and Engine Number.
  */
 public class Motorcycle {
     // Unique Identifier (Primary Key) used for BST Search and Hash Map lookups
@@ -20,12 +20,12 @@ public class Motorcycle {
     /**
      * 7.1.5 DATA SERIALIZATION
      * Formats the motorcycle object into a readable string for reports 
-     * and console display (Section 5.2).
+     * and console display .
      */
     @Override
     public String toString() {
         // Uses string formatting to ensure clear, consistent output for the 
-        // Generate Stock Report process (Section 7.1.4).
+        // Generate Stock Report process .
         return String.format("Engine: %s | Brand: %s | Status: %s | Entered: %s", 
                               engineNumber, brand, status, dateEntered);
     }

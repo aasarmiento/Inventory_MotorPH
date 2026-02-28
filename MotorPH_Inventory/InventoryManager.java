@@ -31,7 +31,9 @@ public class InventoryManager {
 
         // BST: Insert O(log n)
         root = insertBST(root, newNode);
+      /**  // COMMENT THIS LINE OUT:
         System.out.println("Stock Added: " + m.brand);
+         */
     }
 
     private Node insertBST(Node current, Node newNode) {
@@ -107,22 +109,28 @@ public class InventoryManager {
     public Node getRoot() { return this.root; }
 
     // --- CSV OPERATIONS ---
-   public void loadInventoryFromCSV(String fileName) {
-    try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-        String line = br.readLine(); // Read the header line first to move the pointer past it
-        
-        while ((line = br.readLine()) != null) {
-            String[] values = line.split(",");
-            if (values.length >= 4) {
-                // ... create bike and add stock ...
-                // Hint: If you want it quiet, remove the println inside addStock()
+  
+    /**
+     * GEMINI UPDATE: Updated to return boolean so main class can detect if file loading failed.
+     * This ensures the mentor's requirement for a manual fallback is triggered correctly.
+     */
+    public boolean loadInventoryFromCSV(String fileName) {
+        boolean hasData = false; // Start as false
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line = br.readLine(); // Skip header
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                if (values.length >= 4) {
+                    // Logic for internal call: Uses local method scope (Fixes "manager cannot be resolved")
+                    addStock(new Motorcycle(values[3], values[2], values[1], values[0]));
+                    hasData = true; // We successfully added at least one bike!
+                }
             }
+        } catch (IOException e) {
+            return false; // Triggers manual initialization in main
         }
-        System.out.println("Inventory successfully synchronized with CSV data.");
-    } catch (IOException e) {
-        System.out.println("Notice: No existing data file found.");
+        return hasData; // Return the actual result (Fixes the "Notice" appearing incorrectly)
     }
-}
 
     public void saveToCSV(String fileName) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
@@ -136,5 +144,16 @@ public class InventoryManager {
         } catch (IOException e) {
             System.out.println("Error saving: " + e.getMessage());
         }
+    }
+
+    public void seedInventory() {
+        System.out.println("No CSV found. Initializing from hardcoded Excel data...");
+        
+        // Attributes: Date Entered, Status, Brand, Engine Number
+        addStock(new Motorcycle("142QVTSIUR", "Honda", "On-hand", "2026-01-10"));
+        addStock(new Motorcycle("992XPTYIOP", "Kawasaki", "Sold", "2026-01-15"));
+        addStock(new Motorcycle("442BZTREWQ", "Yamaha", "On-hand", "2026-01-20"));
+        
+        System.out.println("Manual initialization complete.");
     }
 }

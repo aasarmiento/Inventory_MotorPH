@@ -11,8 +11,23 @@ public class main {
         InventoryManager manager = new InventoryManager();
         Scanner sc = new Scanner(System.in);
         
-        // DATA PERSISTENCE  Hydrate system from RAM-based structures to permanent CSV
-        manager.loadInventoryFromCSV("inventory.csv");
+        // DATA PERSISTENCE - Hydrate system from RAM-based structures to permanent CSV
+        // GEMINI NOTE: Added return value check to satisfy mentor requirement for manual fallback.
+        boolean csvLoaded = manager.loadInventoryFromCSV("inventory.csv");
+
+        // incase csv is missing or fails to load, we will initialize the system with predefined data as per the excel file attributes.
+        if (!csvLoaded) {
+            System.out.println("Notice: CSV data not detected. Initializing from Excel-defined attributes.");
+            
+            // Defining attributes as indicated on the excel file
+            // Format: Engine Number, Brand, Status, Date Entered
+            manager.addStock(new Motorcycle("142QVTSIUR", "Honda", "On-hand", "01/10/2026"));
+            manager.addStock(new Motorcycle("992XPTYIOP", "Kawasaki", "Sold", "01/15/2026"));
+            manager.addStock(new Motorcycle("442BZTREWQ", "Yamaha", "On-hand", "01/20/2026"));
+            manager.addStock(new Motorcycle("771MLKJHGF", "Suzuki", "On-hand", "01/25/2026"));
+            
+            System.out.println("Manual initialization complete.\n");
+        }
 
         int choice = 0;
 
@@ -29,31 +44,30 @@ public class main {
             
             // Input Validation: Ensures data integrity by preventing non-integer choices
             while (!sc.hasNextInt()) {
-                System.out.println("Invalid input. Please enter a number (1-5).");
-                sc.next(); 
-            }
+    String wrongInput = sc.next(); // Capture the "bad" data
+    System.out.println("Invalid input ['" + wrongInput + "']. Please enter a number (1-5).");
+}
             choice = sc.nextInt();
             sc.nextLine(); 
            
             switch (choice) {
                 case 1 -> {
-                    // ADD NEW STOCK LOGIC 
-                    // Implements Dynamic Entry by attaching records to the DLL and BST simultaneously.
-                    System.out.print("Enter Engine Number: "); 
-                    String eNum = sc.next();
-                    sc.nextLine(); // clear buffer
-                    System.out.print("Enter Brand: "); 
-                    String brand = sc.nextLine();
-                    System.out.print("Enter Status (Old/New): "); 
-                    String status = sc.nextLine();
-                    System.out.print("Enter Date Entered (MM/DD/YYYY): "); 
-                    String date = sc.nextLine();
-                    
-                    // Logic for Data Entry: Ensures the new Data Object is linked without resizing overhead.
-                    manager.addStock(new Motorcycle(eNum, brand, status, date));
-                    System.out.println("\nPress Enter to return to menu...");
-                    sc.nextLine(); 
-                }
+    System.out.print("Enter Engine Number: "); 
+    String eNum = sc.nextLine(); // Changed to nextLine for consistency
+    
+    System.out.print("Enter Brand: "); 
+    String brand = sc.nextLine();
+    
+    System.out.print("Enter Status (Old/New): "); 
+    String status = sc.nextLine();
+    
+    System.out.print("Enter Date Entered (MM/DD/YYYY): "); 
+    String date = sc.nextLine();
+    
+    manager.addStock(new Motorcycle(eNum, brand, status, date));
+    System.out.println("\nPress Enter to return to menu...");
+    sc.nextLine(); 
+}
                 case 2 -> {
                     // SEARCH LOGIC  
                     // Implements the "Divide and Conquer" strategy (O(log n)) using the Binary Search Tree.
@@ -78,16 +92,13 @@ public class main {
                     System.out.println("--------------------------------");
                 }
                 case 4 -> {
-                    // DELETE LOGIC
-                    // Removes records from both BST and DLL to maintain data consistency.
-                    System.out.print("Enter Engine Number to DELETE: ");
-                    String dId = sc.next();
-                    
-                    // Logic for Deletion: Uses pointer re-linking (DLL) and recursive removal (BST).
-                    manager.deleteStock(dId);
-                    System.out.println("\nPress Enter to return to menu...");
-                    sc.nextLine(); sc.nextLine();
-                }
+    System.out.print("Enter Engine Number to DELETE: ");
+    String dId = sc.nextLine(); // Use nextLine to keep buffer clean
+    
+    manager.deleteStock(dId);
+    System.out.println("\nPress Enter to return to menu...");
+    sc.nextLine(); 
+}
                 case 5 -> {
                     // EXIT AND DATA PERSISTENCE 
                     // Linear Data Extraction translates temporary RAM structures back to flat-file storage.
